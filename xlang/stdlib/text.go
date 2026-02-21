@@ -204,7 +204,7 @@ var textModule = map[string]xlang.Object{
 func textREMatch(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 2 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	s1, ok := xlang.ToString(args[0])
@@ -214,7 +214,7 @@ func textREMatch(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "string(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	s2, ok := xlang.ToString(args[1])
@@ -224,13 +224,13 @@ func textREMatch(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "string(compatible)",
 			Found:    args[1].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	matched, err := regexp.MatchString(s1, s2)
 	if err != nil {
 		ret = wrapError(err)
-		return
+		return ret, err
 	}
 
 	if matched {
@@ -239,14 +239,14 @@ func textREMatch(args ...xlang.Object) (ret xlang.Object, err error) {
 		ret = xlang.FalseValue
 	}
 
-	return
+	return ret, err
 }
 
 func textREFind(args ...xlang.Object) (ret xlang.Object, err error) {
 	numArgs := len(args)
 	if numArgs != 2 && numArgs != 3 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	s1, ok := xlang.ToString(args[0])
@@ -256,13 +256,13 @@ func textREFind(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "string(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	re, err := regexp.Compile(s1)
 	if err != nil {
 		ret = wrapError(err)
-		return
+		return ret, err
 	}
 
 	s2, ok := xlang.ToString(args[1])
@@ -272,14 +272,14 @@ func textREFind(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "string(compatible)",
 			Found:    args[1].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	if numArgs < 3 {
 		m := re.FindStringSubmatchIndex(s2)
 		if m == nil {
 			ret = xlang.UndefinedValue
-			return
+			return ret, err
 		}
 
 		arr := &xlang.Array{}
@@ -296,7 +296,7 @@ func textREFind(args ...xlang.Object) (ret xlang.Object, err error) {
 
 		ret = &xlang.Array{Value: []xlang.Object{arr}}
 
-		return
+		return ret, err
 	}
 
 	i3, ok := xlang.ToInt(args[2])
@@ -306,12 +306,12 @@ func textREFind(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "int(compatible)",
 			Found:    args[2].TypeName(),
 		}
-		return
+		return ret, err
 	}
 	m := re.FindAllStringSubmatchIndex(s2, i3)
 	if m == nil {
 		ret = xlang.UndefinedValue
-		return
+		return ret, err
 	}
 
 	arr := &xlang.Array{}
@@ -333,13 +333,13 @@ func textREFind(args ...xlang.Object) (ret xlang.Object, err error) {
 
 	ret = arr
 
-	return
+	return ret, err
 }
 
 func textREReplace(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 3 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	s1, ok := xlang.ToString(args[0])
@@ -349,7 +349,7 @@ func textREReplace(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "string(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	s2, ok := xlang.ToString(args[1])
@@ -359,7 +359,7 @@ func textREReplace(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "string(compatible)",
 			Found:    args[1].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	s3, ok := xlang.ToString(args[2])
@@ -369,7 +369,7 @@ func textREReplace(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "string(compatible)",
 			Found:    args[2].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	re, err := regexp.Compile(s1)
@@ -384,14 +384,14 @@ func textREReplace(args ...xlang.Object) (ret xlang.Object, err error) {
 		ret = &xlang.String{Value: s}
 	}
 
-	return
+	return ret, err
 }
 
 func textRESplit(args ...xlang.Object) (ret xlang.Object, err error) {
 	numArgs := len(args)
 	if numArgs != 2 && numArgs != 3 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	s1, ok := xlang.ToString(args[0])
@@ -401,7 +401,7 @@ func textRESplit(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "string(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	s2, ok := xlang.ToString(args[1])
@@ -411,10 +411,10 @@ func textRESplit(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "string(compatible)",
 			Found:    args[1].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
-	var i3 = -1
+	i3 := -1
 	if numArgs > 2 {
 		i3, ok = xlang.ToInt(args[2])
 		if !ok {
@@ -423,14 +423,14 @@ func textRESplit(args ...xlang.Object) (ret xlang.Object, err error) {
 				Expected: "int(compatible)",
 				Found:    args[2].TypeName(),
 			}
-			return
+			return ret, err
 		}
 	}
 
 	re, err := regexp.Compile(s1)
 	if err != nil {
 		ret = wrapError(err)
-		return
+		return ret, err
 	}
 
 	arr := &xlang.Array{}
@@ -440,13 +440,13 @@ func textRESplit(args ...xlang.Object) (ret xlang.Object, err error) {
 
 	ret = arr
 
-	return
+	return ret, err
 }
 
 func textRECompile(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	s1, ok := xlang.ToString(args[0])
@@ -456,7 +456,7 @@ func textRECompile(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "string(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	re, err := regexp.Compile(s1)
@@ -466,13 +466,13 @@ func textRECompile(args ...xlang.Object) (ret xlang.Object, err error) {
 		ret = makeTextRegexp(re)
 	}
 
-	return
+	return ret, err
 }
 
 func textReplace(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 4 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	s1, ok := xlang.ToString(args[0])
@@ -482,7 +482,7 @@ func textReplace(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "string(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	s2, ok := xlang.ToString(args[1])
@@ -492,7 +492,7 @@ func textReplace(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "string(compatible)",
 			Found:    args[1].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	s3, ok := xlang.ToString(args[2])
@@ -502,7 +502,7 @@ func textReplace(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "string(compatible)",
 			Found:    args[2].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	i4, ok := xlang.ToInt(args[3])
@@ -512,25 +512,25 @@ func textReplace(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "int(compatible)",
 			Found:    args[3].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	s, ok := doTextReplace(s1, s2, s3, i4)
 	if !ok {
 		err = xlang.ErrStringLimit
-		return
+		return ret, err
 	}
 
 	ret = &xlang.String{Value: s}
 
-	return
+	return ret, err
 }
 
 func textSubstring(args ...xlang.Object) (ret xlang.Object, err error) {
 	argslen := len(args)
 	if argslen != 2 && argslen != 3 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	s1, ok := xlang.ToString(args[0])
@@ -540,7 +540,7 @@ func textSubstring(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "string(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	i2, ok := xlang.ToInt(args[1])
@@ -550,7 +550,7 @@ func textSubstring(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "int(compatible)",
 			Found:    args[1].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	strlen := len(s1)
@@ -563,13 +563,13 @@ func textSubstring(args ...xlang.Object) (ret xlang.Object, err error) {
 				Expected: "int(compatible)",
 				Found:    args[2].TypeName(),
 			}
-			return
+			return ret, err
 		}
 	}
 
 	if i2 > i3 {
 		err = xlang.ErrInvalidIndexType
-		return
+		return ret, err
 	}
 
 	if i2 < 0 {
@@ -586,14 +586,14 @@ func textSubstring(args ...xlang.Object) (ret xlang.Object, err error) {
 
 	ret = &xlang.String{Value: s1[i2:i3]}
 
-	return
+	return ret, err
 }
 
 func textPadLeft(args ...xlang.Object) (ret xlang.Object, err error) {
 	argslen := len(args)
 	if argslen != 2 && argslen != 3 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	s1, ok := xlang.ToString(args[0])
@@ -603,7 +603,7 @@ func textPadLeft(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "string(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	i2, ok := xlang.ToInt(args[1])
@@ -613,7 +613,7 @@ func textPadLeft(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "int(compatible)",
 			Found:    args[1].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	if i2 > xlang.MaxStringLen {
@@ -623,7 +623,7 @@ func textPadLeft(args ...xlang.Object) (ret xlang.Object, err error) {
 	sLen := len(s1)
 	if sLen >= i2 {
 		ret = &xlang.String{Value: s1}
-		return
+		return ret, err
 	}
 
 	s3 := " "
@@ -635,28 +635,28 @@ func textPadLeft(args ...xlang.Object) (ret xlang.Object, err error) {
 				Expected: "string(compatible)",
 				Found:    args[2].TypeName(),
 			}
-			return
+			return ret, err
 		}
 	}
 
 	padStrLen := len(s3)
 	if padStrLen == 0 {
 		ret = &xlang.String{Value: s1}
-		return
+		return ret, err
 	}
 
 	padCount := ((i2 - padStrLen) / padStrLen) + 1
 	retStr := strings.Repeat(s3, padCount) + s1
 	ret = &xlang.String{Value: retStr[len(retStr)-i2:]}
 
-	return
+	return ret, err
 }
 
 func textPadRight(args ...xlang.Object) (ret xlang.Object, err error) {
 	argslen := len(args)
 	if argslen != 2 && argslen != 3 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	s1, ok := xlang.ToString(args[0])
@@ -666,7 +666,7 @@ func textPadRight(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "string(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	i2, ok := xlang.ToInt(args[1])
@@ -676,7 +676,7 @@ func textPadRight(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "int(compatible)",
 			Found:    args[1].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	if i2 > xlang.MaxStringLen {
@@ -686,7 +686,7 @@ func textPadRight(args ...xlang.Object) (ret xlang.Object, err error) {
 	sLen := len(s1)
 	if sLen >= i2 {
 		ret = &xlang.String{Value: s1}
-		return
+		return ret, err
 	}
 
 	s3 := " "
@@ -698,21 +698,21 @@ func textPadRight(args ...xlang.Object) (ret xlang.Object, err error) {
 				Expected: "string(compatible)",
 				Found:    args[2].TypeName(),
 			}
-			return
+			return ret, err
 		}
 	}
 
 	padStrLen := len(s3)
 	if padStrLen == 0 {
 		ret = &xlang.String{Value: s1}
-		return
+		return ret, err
 	}
 
 	padCount := ((i2 - padStrLen) / padStrLen) + 1
 	retStr := s1 + strings.Repeat(s3, padCount)
 	ret = &xlang.String{Value: retStr[:i2]}
 
-	return
+	return ret, err
 }
 
 func textRepeat(args ...xlang.Object) (ret xlang.Object, err error) {
@@ -807,7 +807,7 @@ func textJoin(args ...xlang.Object) (ret xlang.Object, err error) {
 func textFormatBool(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	b1, ok := args[0].(*xlang.Bool)
@@ -817,7 +817,7 @@ func textFormatBool(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "bool",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	if b1 == xlang.TrueValue {
@@ -826,13 +826,13 @@ func textFormatBool(args ...xlang.Object) (ret xlang.Object, err error) {
 		ret = &xlang.String{Value: "false"}
 	}
 
-	return
+	return ret, err
 }
 
 func textFormatFloat(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 4 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	f1, ok := args[0].(*xlang.Float)
@@ -842,7 +842,7 @@ func textFormatFloat(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "float",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	s2, ok := xlang.ToString(args[1])
@@ -852,7 +852,7 @@ func textFormatFloat(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "string(compatible)",
 			Found:    args[1].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	i3, ok := xlang.ToInt(args[2])
@@ -862,7 +862,7 @@ func textFormatFloat(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "int(compatible)",
 			Found:    args[2].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	i4, ok := xlang.ToInt(args[3])
@@ -872,18 +872,18 @@ func textFormatFloat(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "int(compatible)",
 			Found:    args[3].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.String{Value: strconv.FormatFloat(f1.Value, s2[0], i3, i4)}
 
-	return
+	return ret, err
 }
 
 func textFormatInt(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 2 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	i1, ok := args[0].(*xlang.Int)
@@ -893,7 +893,7 @@ func textFormatInt(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "int",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	i2, ok := xlang.ToInt(args[1])
@@ -903,18 +903,18 @@ func textFormatInt(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "int(compatible)",
 			Found:    args[1].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.String{Value: strconv.FormatInt(i1.Value, i2)}
 
-	return
+	return ret, err
 }
 
 func textParseBool(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	s1, ok := args[0].(*xlang.String)
@@ -924,13 +924,13 @@ func textParseBool(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "string",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	parsed, err := strconv.ParseBool(s1.Value)
 	if err != nil {
 		ret = wrapError(err)
-		return
+		return ret, err
 	}
 
 	if parsed {
@@ -939,13 +939,13 @@ func textParseBool(args ...xlang.Object) (ret xlang.Object, err error) {
 		ret = xlang.FalseValue
 	}
 
-	return
+	return ret, err
 }
 
 func textParseFloat(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 2 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	s1, ok := args[0].(*xlang.String)
@@ -955,7 +955,7 @@ func textParseFloat(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "string",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	i2, ok := xlang.ToInt(args[1])
@@ -965,24 +965,24 @@ func textParseFloat(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "int(compatible)",
 			Found:    args[1].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	parsed, err := strconv.ParseFloat(s1.Value, i2)
 	if err != nil {
 		ret = wrapError(err)
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Float{Value: parsed}
 
-	return
+	return ret, err
 }
 
 func textParseInt(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 3 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	s1, ok := args[0].(*xlang.String)
@@ -992,7 +992,7 @@ func textParseInt(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "string",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	i2, ok := xlang.ToInt(args[1])
@@ -1002,7 +1002,7 @@ func textParseInt(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "int(compatible)",
 			Found:    args[1].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	i3, ok := xlang.ToInt(args[2])
@@ -1012,18 +1012,18 @@ func textParseInt(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "int(compatible)",
 			Found:    args[2].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	parsed, err := strconv.ParseInt(s1.Value, i2, i3)
 	if err != nil {
 		ret = wrapError(err)
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Int{Value: parsed}
 
-	return
+	return ret, err
 }
 
 // Modified implementation of strings.Replace

@@ -17,7 +17,7 @@ func makeTextRegexp(re *regexp.Regexp) *xlang.ImmutableMap {
 				) {
 					if len(args) != 1 {
 						err = xlang.ErrWrongNumArguments
-						return
+						return ret, err
 					}
 
 					s1, ok := xlang.ToString(args[0])
@@ -27,7 +27,7 @@ func makeTextRegexp(re *regexp.Regexp) *xlang.ImmutableMap {
 							Expected: "string(compatible)",
 							Found:    args[0].TypeName(),
 						}
-						return
+						return ret, err
 					}
 
 					if re.MatchString(s1) {
@@ -36,7 +36,7 @@ func makeTextRegexp(re *regexp.Regexp) *xlang.ImmutableMap {
 						ret = xlang.FalseValue
 					}
 
-					return
+					return ret, err
 				},
 			},
 
@@ -50,7 +50,7 @@ func makeTextRegexp(re *regexp.Regexp) *xlang.ImmutableMap {
 					numArgs := len(args)
 					if numArgs != 1 && numArgs != 2 {
 						err = xlang.ErrWrongNumArguments
-						return
+						return ret, err
 					}
 
 					s1, ok := xlang.ToString(args[0])
@@ -60,14 +60,14 @@ func makeTextRegexp(re *regexp.Regexp) *xlang.ImmutableMap {
 							Expected: "string(compatible)",
 							Found:    args[0].TypeName(),
 						}
-						return
+						return ret, err
 					}
 
 					if numArgs == 1 {
 						m := re.FindStringSubmatchIndex(s1)
 						if m == nil {
 							ret = xlang.UndefinedValue
-							return
+							return ret, err
 						}
 
 						arr := &xlang.Array{}
@@ -84,12 +84,13 @@ func makeTextRegexp(re *regexp.Regexp) *xlang.ImmutableMap {
 										"end": &xlang.Int{
 											Value: int64(m[i+1]),
 										},
-									}})
+									},
+								})
 						}
 
 						ret = &xlang.Array{Value: []xlang.Object{arr}}
 
-						return
+						return ret, err
 					}
 
 					i2, ok := xlang.ToInt(args[1])
@@ -99,12 +100,12 @@ func makeTextRegexp(re *regexp.Regexp) *xlang.ImmutableMap {
 							Expected: "int(compatible)",
 							Found:    args[1].TypeName(),
 						}
-						return
+						return ret, err
 					}
 					m := re.FindAllStringSubmatchIndex(s1, i2)
 					if m == nil {
 						ret = xlang.UndefinedValue
-						return
+						return ret, err
 					}
 
 					arr := &xlang.Array{}
@@ -123,7 +124,8 @@ func makeTextRegexp(re *regexp.Regexp) *xlang.ImmutableMap {
 										"end": &xlang.Int{
 											Value: int64(m[i+1]),
 										},
-									}})
+									},
+								})
 						}
 
 						arr.Value = append(arr.Value, subMatch)
@@ -131,7 +133,7 @@ func makeTextRegexp(re *regexp.Regexp) *xlang.ImmutableMap {
 
 					ret = arr
 
-					return
+					return ret, err
 				},
 			},
 
@@ -143,7 +145,7 @@ func makeTextRegexp(re *regexp.Regexp) *xlang.ImmutableMap {
 				) {
 					if len(args) != 2 {
 						err = xlang.ErrWrongNumArguments
-						return
+						return ret, err
 					}
 
 					s1, ok := xlang.ToString(args[0])
@@ -153,7 +155,7 @@ func makeTextRegexp(re *regexp.Regexp) *xlang.ImmutableMap {
 							Expected: "string(compatible)",
 							Found:    args[0].TypeName(),
 						}
-						return
+						return ret, err
 					}
 
 					s2, ok := xlang.ToString(args[1])
@@ -163,7 +165,7 @@ func makeTextRegexp(re *regexp.Regexp) *xlang.ImmutableMap {
 							Expected: "string(compatible)",
 							Found:    args[1].TypeName(),
 						}
-						return
+						return ret, err
 					}
 
 					s, ok := doTextRegexpReplace(re, s1, s2)
@@ -173,7 +175,7 @@ func makeTextRegexp(re *regexp.Regexp) *xlang.ImmutableMap {
 
 					ret = &xlang.String{Value: s}
 
-					return
+					return ret, err
 				},
 			},
 
@@ -187,7 +189,7 @@ func makeTextRegexp(re *regexp.Regexp) *xlang.ImmutableMap {
 					numArgs := len(args)
 					if numArgs != 1 && numArgs != 2 {
 						err = xlang.ErrWrongNumArguments
-						return
+						return ret, err
 					}
 
 					s1, ok := xlang.ToString(args[0])
@@ -197,10 +199,10 @@ func makeTextRegexp(re *regexp.Regexp) *xlang.ImmutableMap {
 							Expected: "string(compatible)",
 							Found:    args[0].TypeName(),
 						}
-						return
+						return ret, err
 					}
 
-					var i2 = -1
+					i2 := -1
 					if numArgs > 1 {
 						i2, ok = xlang.ToInt(args[1])
 						if !ok {
@@ -209,7 +211,7 @@ func makeTextRegexp(re *regexp.Regexp) *xlang.ImmutableMap {
 								Expected: "int(compatible)",
 								Found:    args[1].TypeName(),
 							}
-							return
+							return ret, err
 						}
 					}
 
@@ -221,7 +223,7 @@ func makeTextRegexp(re *regexp.Regexp) *xlang.ImmutableMap {
 
 					ret = arr
 
-					return
+					return ret, err
 				},
 			},
 		},

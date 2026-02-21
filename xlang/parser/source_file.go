@@ -98,7 +98,7 @@ func (s *SourceFileSet) File(p Pos) (f *SourceFile) {
 	if p != NoPos {
 		f = s.file(p)
 	}
-	return
+	return f
 }
 
 // Position converts a SourcePos p in the fileset into a SourceFilePos value.
@@ -108,7 +108,7 @@ func (s *SourceFileSet) Position(p Pos) (pos SourceFilePos) {
 			return f.position(p)
 		}
 	}
-	return
+	return pos
 }
 
 func (s *SourceFileSet) file(p Pos) *SourceFile {
@@ -203,14 +203,14 @@ func (f *SourceFile) Position(p Pos) (pos SourceFilePos) {
 		}
 		pos = f.position(p)
 	}
-	return
+	return pos
 }
 
 func (f *SourceFile) position(p Pos) (pos SourceFilePos) {
 	offset := int(p) - f.Base
 	pos.Offset = offset
 	pos.Filename, pos.Line, pos.Column = f.unpack(offset)
-	return
+	return pos
 }
 
 func (f *SourceFile) unpack(offset int) (filename string, line, column int) {
@@ -218,7 +218,7 @@ func (f *SourceFile) unpack(offset int) (filename string, line, column int) {
 	if i := searchInts(f.Lines, offset); i >= 0 {
 		line, column = i+1, offset-f.Lines[i]+1
 	}
-	return
+	return filename, line, column
 }
 
 func searchInts(a []int, x int) int {

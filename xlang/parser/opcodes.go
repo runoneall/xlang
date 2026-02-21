@@ -154,5 +154,5 @@ func ReadOperands(numOperands []int, ins []byte) (operands []int, offset int) {
 		}
 		offset += width
 	}
-	return
+	return operands, offset
 }

@@ -65,7 +65,7 @@ func (b *Bytecode) FormatConstants() (output []string) {
 				cidx, cn, reflect.TypeOf(cn).Elem().Name(), &cn))
 		}
 	}
-	return
+	return output
 }
 
 // Decode reads Bytecode data from the reader.

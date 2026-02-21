@@ -146,10 +146,10 @@ func (s *Script) Compile() (*Compiled, error) {
 func (s *Script) Run() (compiled *Compiled, err error) {
 	compiled, err = s.Compile()
 	if err != nil {
-		return
+		return compiled, err
 	}
 	err = compiled.Run()
-	return
+	return compiled, err
 }
 
 // RunContext is like Run but includes a context.
@@ -158,10 +158,10 @@ func (s *Script) RunContext(
 ) (compiled *Compiled, err error) {
 	compiled, err = s.Compile()
 	if err != nil {
-		return
+		return compiled, err
 	}
 	err = compiled.RunContext(ctx)
-	return
+	return compiled, err
 }
 
 func (s *Script) prepCompile() (
@@ -189,7 +189,7 @@ func (s *Script) prepCompile() (
 		}
 		globals[symbol.Index] = s.variables[name].value
 	}
-	return
+	return symbolTable, globals, err
 }
 
 // Compiled is a compiled instance of the user script. Use Script.Compile() to
@@ -241,7 +241,7 @@ func (c *Compiled) RunContext(ctx context.Context) (err error) {
 		err = ctx.Err()
 	case err = <-ch:
 	}
-	return
+	return err
 }
 
 // Size of compiled script in bytes

@@ -782,7 +782,7 @@ func parsenum(s string, start, end int) (num int, isnum bool, newi int) {
 		num = num*10 + int(s[newi]-'0')
 		isnum = true
 	}
-	return
+	return num, isnum, newi
 }
 
 func (p *pp) badVerb(verb rune) {
@@ -980,7 +980,7 @@ func intFromArg(a []Object, argNum int) (num int, isInt bool, newArgNum int) {
 			isInt = false
 		}
 	}
-	return
+	return num, isInt, newArgNum
 }
 
 // parseArgNumber returns the value of the bracketed number, minus 1
@@ -989,7 +989,7 @@ func intFromArg(a []Object, argNum int) (num int, isInt bool, newArgNum int) {
 // The returned values are the index, the number of bytes to consume
 // up to the closing paren, if present, and whether the number parsed
 // ok. The bytes to consume will be 1 if no closing paren is present.
-func parseArgNumber(format string) (index int, wid int, ok bool) {
+func parseArgNumber(format string) (index, wid int, ok bool) {
 	// There must be at least 3 bytes: [n].
 	if len(format) < 3 {
 		return 0, 1, false

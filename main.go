@@ -101,7 +101,7 @@ func CompileOnly(
 ) (err error) {
 	bytecode, err := compileSrc(modules, data, inputFile)
 	if err != nil {
-		return
+		return err
 	}
 
 	if outputFile == "" {
@@ -110,7 +110,7 @@ func CompileOnly(
 
 	out, err := os.OpenFile(outputFile, os.O_CREATE|os.O_WRONLY, os.ModePerm)
 	if err != nil {
-		return
+		return err
 	}
 	defer func() {
 		if err != nil {
@@ -122,10 +122,10 @@ func CompileOnly(
 
 	err = bytecode.Encode(out)
 	if err != nil {
-		return
+		return err
 	}
 	fmt.Println(outputFile)
-	return
+	return err
 }
 
 // CompileAndRun compiles the source code and executes it.
@@ -136,12 +136,12 @@ func CompileAndRun(
 ) (err error) {
 	bytecode, err := compileSrc(modules, data, inputFile)
 	if err != nil {
-		return
+		return err
 	}
 
 	machine := xlang.NewVM(bytecode, nil, -1)
 	err = machine.Run()
-	return
+	return err
 }
 
 // RunCompiled reads the compiled binary from file and executes it.
@@ -149,12 +149,12 @@ func RunCompiled(modules *xlang.ModuleMap, data []byte) (err error) {
 	bytecode := &xlang.Bytecode{}
 	err = bytecode.Decode(bytes.NewReader(data), modules)
 	if err != nil {
-		return
+		return err
 	}
 
 	machine := xlang.NewVM(bytecode, nil, -1)
 	err = machine.Run()
-	return
+	return err
 }
 
 // RunREPL starts REPL.
@@ -183,7 +183,7 @@ func RunREPL(modules *xlang.ModuleMap, in io.Reader, out io.Writer) {
 			}
 			printArgs = append(printArgs, "\n")
 			_, _ = fmt.Print(printArgs...)
-			return
+			return ret, err
 		},
 	}
 

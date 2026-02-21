@@ -607,8 +607,7 @@ func (v *VM) run() {
 						(nextOp == parser.OpPop &&
 							parser.OpReturn == v.curInsts[v.ip+2]) {
 						for p := 0; p < numArgs; p++ {
-							v.stack[v.curFrame.basePointer+p] =
-								v.stack[v.sp-numArgs+p]
+							v.stack[v.curFrame.basePointer+p] = v.stack[v.sp-numArgs+p]
 						}
 						v.sp -= numArgs + 1
 						v.ip = -1 // reset IP to beginning of the frame
@@ -675,16 +674,16 @@ func (v *VM) run() {
 			} else {
 				retVal = UndefinedValue
 			}
-			//v.sp--
+			// v.sp--
 			v.framesIndex--
 			v.curFrame = &v.frames[v.framesIndex-1]
 			v.curInsts = v.curFrame.fn.Instructions
 			v.ip = v.curFrame.ip
-			//v.sp = lastFrame.basePointer - 1
+			// v.sp = lastFrame.basePointer - 1
 			v.sp = v.frames[v.framesIndex].basePointer
 			// skip stack overflow check because (newSP) <= (oldSP)
 			v.stack[v.sp-1] = retVal
-			//v.sp++
+			// v.sp++
 		case parser.OpDefineLocal:
 			v.ip++
 			localIndex := int(v.curInsts[v.ip])

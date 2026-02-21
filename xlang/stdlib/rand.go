@@ -52,7 +52,7 @@ var randModule = map[string]xlang.Object{
 			res, err := rand.Read(y1.Value)
 			if err != nil {
 				ret = wrapError(err)
-				return
+				return ret, err
 			}
 			return &xlang.Int{Value: int64(res)}, nil
 		},
@@ -128,7 +128,7 @@ func randRand(r *rand.Rand) *xlang.ImmutableMap {
 					res, err := r.Read(y1.Value)
 					if err != nil {
 						ret = wrapError(err)
-						return
+						return ret, err
 					}
 					return &xlang.Int{Value: int64(res)}, nil
 				},

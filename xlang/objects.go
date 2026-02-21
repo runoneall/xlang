@@ -83,8 +83,7 @@ type Object interface {
 // value type, one can embed ObjectImpl in their type declarations to avoid
 // implementing all non-significant methods. TypeName() and String() methods
 // still need to be implemented.
-type ObjectImpl struct {
-}
+type ObjectImpl struct{}
 
 // TypeName returns the name of the type.
 func (o *ObjectImpl) TypeName() string {
@@ -224,15 +223,15 @@ func (o *Array) IndexGet(index Object) (res Object, err error) {
 	intIdx, ok := index.(*Int)
 	if !ok {
 		err = ErrInvalidIndexType
-		return
+		return res, err
 	}
 	idxVal := int(intIdx.Value)
 	if idxVal < 0 || idxVal >= len(o.Value) {
 		res = UndefinedValue
-		return
+		return res, err
 	}
 	res = o.Value[idxVal]
-	return
+	return res, err
 }
 
 // IndexSet sets an element at a given index.
@@ -240,11 +239,11 @@ func (o *Array) IndexSet(index, value Object) (err error) {
 	intIdx, ok := ToInt(index)
 	if !ok {
 		err = ErrInvalidIndexType
-		return
+		return err
 	}
 	if intIdx < 0 || intIdx >= len(o.Value) {
 		err = ErrIndexOutOfBounds
-		return
+		return err
 	}
 	o.Value[intIdx] = value
 	return nil
@@ -304,7 +303,7 @@ func (o *Bool) Equals(x Object) bool {
 // GobDecode decodes bool value from input bytes.
 func (o *Bool) GobDecode(b []byte) (err error) {
 	o.value = b[0] == 1
-	return
+	return err
 }
 
 // GobEncode encodes bool values into bytes.
@@ -314,7 +313,7 @@ func (o *Bool) GobEncode() (b []byte, err error) {
 	} else {
 		b = []byte{0}
 	}
-	return
+	return b, err
 }
 
 // BuiltinFunction represents a builtin function.
@@ -430,15 +429,15 @@ func (o *Bytes) IndexGet(index Object) (res Object, err error) {
 	intIdx, ok := index.(*Int)
 	if !ok {
 		err = ErrInvalidIndexType
-		return
+		return res, err
 	}
 	idxVal := int(intIdx.Value)
 	if idxVal < 0 || idxVal >= len(o.Value) {
 		res = UndefinedValue
-		return
+		return res, err
 	}
 	res = &Int{Value: int64(o.Value[idxVal])}
-	return
+	return res, err
 }
 
 // Iterate creates a bytes iterator.
@@ -664,10 +663,10 @@ func (o *Error) Equals(x Object) bool {
 func (o *Error) IndexGet(index Object) (res Object, err error) {
 	if strIdx, _ := ToString(index); strIdx != "value" {
 		err = ErrInvalidIndexOnError
-		return
+		return res, err
 	}
 	res = o.Value
-	return
+	return res, err
 }
 
 // Float represents a floating point number value.
@@ -880,15 +879,15 @@ func (o *ImmutableArray) IndexGet(index Object) (res Object, err error) {
 	intIdx, ok := index.(*Int)
 	if !ok {
 		err = ErrInvalidIndexType
-		return
+		return res, err
 	}
 	idxVal := int(intIdx.Value)
 	if idxVal < 0 || idxVal >= len(o.Value) {
 		res = UndefinedValue
-		return
+		return res, err
 	}
 	res = o.Value[idxVal]
-	return
+	return res, err
 }
 
 // Iterate creates an array iterator.
@@ -942,13 +941,13 @@ func (o *ImmutableMap) IndexGet(index Object) (res Object, err error) {
 	strIdx, ok := ToString(index)
 	if !ok {
 		err = ErrInvalidIndexType
-		return
+		return res, err
 	}
 	res, ok = o.Value[strIdx]
 	if !ok {
 		res = UndefinedValue
 	}
-	return
+	return res, err
 }
 
 // Equals returns true if the value of the type is equal to the value of
@@ -1245,13 +1244,13 @@ func (o *Map) IndexGet(index Object) (res Object, err error) {
 	strIdx, ok := ToString(index)
 	if !ok {
 		err = ErrInvalidIndexType
-		return
+		return res, err
 	}
 	res, ok = o.Value[strIdx]
 	if !ok {
 		res = UndefinedValue
 	}
-	return
+	return res, err
 }
 
 // IndexSet sets the value for the given key.
@@ -1259,7 +1258,7 @@ func (o *Map) IndexSet(index, value Object) (err error) {
 	strIdx, ok := ToString(index)
 	if !ok {
 		err = ErrInvalidIndexType
-		return
+		return err
 	}
 	o.Value[strIdx] = value
 	return nil
@@ -1409,7 +1408,7 @@ func (o *String) IndexGet(index Object) (res Object, err error) {
 	intIdx, ok := index.(*Int)
 	if !ok {
 		err = ErrInvalidIndexType
-		return
+		return res, err
 	}
 	idxVal := int(intIdx.Value)
 	if o.runeStr == nil {
@@ -1417,10 +1416,10 @@ func (o *String) IndexGet(index Object) (res Object, err error) {
 	}
 	if idxVal < 0 || idxVal >= len(o.runeStr) {
 		res = UndefinedValue
-		return
+		return res, err
 	}
 	res = &Char{Value: o.runeStr[idxVal]}
-	return
+	return res, err
 }
 
 // Iterate creates a string iterator.

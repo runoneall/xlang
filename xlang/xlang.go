@@ -59,13 +59,13 @@ func CountObjects(o Object) (c int) {
 	case *Error:
 		c += CountObjects(o.Value)
 	}
-	return
+	return c
 }
 
 // ToString will try to convert object o to string value.
 func ToString(o Object) (v string, ok bool) {
 	if o == UndefinedValue {
-		return
+		return v, ok
 	}
 	ok = true
 	if str, isStr := o.(*String); isStr {
@@ -73,7 +73,7 @@ func ToString(o Object) (v string, ok bool) {
 	} else {
 		v = o.String()
 	}
-	return
+	return v, ok
 }
 
 // ToInt will try to convert object o to int value.
@@ -100,7 +100,7 @@ func ToInt(o Object) (v int, ok bool) {
 			ok = true
 		}
 	}
-	return
+	return v, ok
 }
 
 // ToInt64 will try to convert object o to int64 value.
@@ -127,7 +127,7 @@ func ToInt64(o Object) (v int64, ok bool) {
 			ok = true
 		}
 	}
-	return
+	return v, ok
 }
 
 // ToFloat64 will try to convert object o to float64 value.
@@ -146,14 +146,14 @@ func ToFloat64(o Object) (v float64, ok bool) {
 			ok = true
 		}
 	}
-	return
+	return v, ok
 }
 
 // ToBool will try to convert object o to bool value.
-func ToBool(o Object) (v bool, ok bool) {
+func ToBool(o Object) (v, ok bool) {
 	ok = true
 	v = !o.IsFalsy()
-	return
+	return v, ok
 }
 
 // ToRune will try to convert object o to rune value.
@@ -166,7 +166,7 @@ func ToRune(o Object) (v rune, ok bool) {
 		v = o.Value
 		ok = true
 	}
-	return
+	return v, ok
 }
 
 // ToByteSlice will try to convert object o to []byte value.
@@ -179,7 +179,7 @@ func ToByteSlice(o Object) (v []byte, ok bool) {
 		v = []byte(o.Value)
 		ok = true
 	}
-	return
+	return v, ok
 }
 
 // ToTime will try to convert object o to time.Time value.
@@ -192,7 +192,7 @@ func ToTime(o Object) (v time.Time, ok bool) {
 		v = time.Unix(o.Value, 0)
 		ok = true
 	}
-	return
+	return v, ok
 }
 
 // ToInterface attempts to convert an object o to an any value
@@ -239,7 +239,7 @@ func ToInterface(o Object) (res any) {
 	case Object:
 		return o
 	}
-	return
+	return res
 }
 
 // FromInterface will attempt to convert an any v to a Tengo Object

@@ -152,7 +152,7 @@ func (p *Parser) ParseFile() (file *File, err error) {
 		InputFile: p.file,
 		Stmts:     stmts,
 	}
-	return
+	return file, err
 }
 
 func (p *Parser) parseExpr() Expr {
@@ -621,7 +621,7 @@ func (p *Parser) parseStmtList() (list []Stmt) {
 	for p.token != token.RBrace && p.token != token.EOF {
 		list = append(list, p.parseStmt())
 	}
-	return
+	return list
 }
 
 func (p *Parser) parseIdent() *Ident {
@@ -855,14 +855,14 @@ func (p *Parser) parseIfHeader() (init Stmt, cond Expr) {
 	if p.token == token.LBrace {
 		p.error(p.pos, "missing condition in if statement")
 		cond = &BadExpr{From: p.pos, To: p.pos}
-		return
+		return init, cond
 	}
 
 	outer := p.exprLevel
 	p.exprLevel = -1
 	if p.token == token.Semicolon {
 		p.error(p.pos, "missing init in if statement")
-		return
+		return init, cond
 	}
 	init = p.parseSimpleStmt(false)
 
@@ -885,7 +885,7 @@ func (p *Parser) parseIfHeader() (init Stmt, cond Expr) {
 		cond = &BadExpr{From: p.pos, To: p.pos}
 	}
 	p.exprLevel = outer
-	return
+	return init, cond
 }
 
 func (p *Parser) makeExpr(s Stmt, want string) Expr {
@@ -1031,7 +1031,7 @@ func (p *Parser) parseExprList() (list []Expr) {
 		p.next()
 		list = append(list, p.parseExpr())
 	}
-	return
+	return list
 }
 
 func (p *Parser) parseMapElementLit() *MapElementLit {

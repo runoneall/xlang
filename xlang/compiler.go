@@ -1039,7 +1039,7 @@ func (c *Compiler) loadCompiledModule(
 		return c.parent.loadCompiledModule(modulePath)
 	}
 	mod, ok = c.compiledModules[modulePath]
-	return
+	return mod, ok
 }
 
 func (c *Compiler) storeCompiledModule(
@@ -1110,7 +1110,7 @@ func (c *Compiler) leaveScope() (
 	if c.trace != nil {
 		c.printTrace("SCOPL", c.scopeIndex)
 	}
-	return
+	return instructions, sourceMap
 }
 
 func (c *Compiler) fork(
@@ -1344,14 +1344,14 @@ func resolveAssignLHS(
 	case *parser.SelectorExpr:
 		name, selectors = resolveAssignLHS(term.Expr)
 		selectors = append(selectors, term.Sel)
-		return
+		return name, selectors
 	case *parser.IndexExpr:
 		name, selectors = resolveAssignLHS(term.Expr)
 		selectors = append(selectors, term.Index)
 	case *parser.Ident:
 		name = term.Name
 	}
-	return
+	return name, selectors
 }
 
 func iterateInstructions(

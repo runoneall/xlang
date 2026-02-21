@@ -2,6 +2,7 @@ package stdlib
 
 import (
 	"time"
+
 	"xlang/xlang"
 )
 
@@ -188,7 +189,7 @@ var timesModule = map[string]xlang.Object{
 func timesSleep(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	i1, ok := xlang.ToInt64(args[0])
@@ -198,13 +199,13 @@ func timesSleep(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "int(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	time.Sleep(time.Duration(i1))
 	ret = xlang.UndefinedValue
 
-	return
+	return ret, err
 }
 
 func timesParseDuration(args ...xlang.Object) (
@@ -213,7 +214,7 @@ func timesParseDuration(args ...xlang.Object) (
 ) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	s1, ok := xlang.ToString(args[0])
@@ -223,18 +224,18 @@ func timesParseDuration(args ...xlang.Object) (
 			Expected: "string(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	dur, err := time.ParseDuration(s1)
 	if err != nil {
 		ret = wrapError(err)
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Int{Value: int64(dur)}
 
-	return
+	return ret, err
 }
 
 func timesSince(args ...xlang.Object) (
@@ -243,7 +244,7 @@ func timesSince(args ...xlang.Object) (
 ) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	t1, ok := xlang.ToTime(args[0])
@@ -253,12 +254,12 @@ func timesSince(args ...xlang.Object) (
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Int{Value: int64(time.Since(t1))}
 
-	return
+	return ret, err
 }
 
 func timesUntil(args ...xlang.Object) (
@@ -267,7 +268,7 @@ func timesUntil(args ...xlang.Object) (
 ) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	t1, ok := xlang.ToTime(args[0])
@@ -277,12 +278,12 @@ func timesUntil(args ...xlang.Object) (
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Int{Value: int64(time.Until(t1))}
 
-	return
+	return ret, err
 }
 
 func timesDurationHours(args ...xlang.Object) (
@@ -291,7 +292,7 @@ func timesDurationHours(args ...xlang.Object) (
 ) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	i1, ok := xlang.ToInt64(args[0])
@@ -301,12 +302,12 @@ func timesDurationHours(args ...xlang.Object) (
 			Expected: "int(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Float{Value: time.Duration(i1).Hours()}
 
-	return
+	return ret, err
 }
 
 func timesDurationMinutes(args ...xlang.Object) (
@@ -315,7 +316,7 @@ func timesDurationMinutes(args ...xlang.Object) (
 ) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	i1, ok := xlang.ToInt64(args[0])
@@ -325,12 +326,12 @@ func timesDurationMinutes(args ...xlang.Object) (
 			Expected: "int(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Float{Value: time.Duration(i1).Minutes()}
 
-	return
+	return ret, err
 }
 
 func timesDurationNanoseconds(args ...xlang.Object) (
@@ -339,7 +340,7 @@ func timesDurationNanoseconds(args ...xlang.Object) (
 ) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	i1, ok := xlang.ToInt64(args[0])
@@ -349,12 +350,12 @@ func timesDurationNanoseconds(args ...xlang.Object) (
 			Expected: "int(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Int{Value: time.Duration(i1).Nanoseconds()}
 
-	return
+	return ret, err
 }
 
 func timesDurationSeconds(args ...xlang.Object) (
@@ -363,7 +364,7 @@ func timesDurationSeconds(args ...xlang.Object) (
 ) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	i1, ok := xlang.ToInt64(args[0])
@@ -373,12 +374,12 @@ func timesDurationSeconds(args ...xlang.Object) (
 			Expected: "int(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Float{Value: time.Duration(i1).Seconds()}
 
-	return
+	return ret, err
 }
 
 func timesDurationString(args ...xlang.Object) (
@@ -387,7 +388,7 @@ func timesDurationString(args ...xlang.Object) (
 ) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	i1, ok := xlang.ToInt64(args[0])
@@ -397,12 +398,12 @@ func timesDurationString(args ...xlang.Object) (
 			Expected: "int(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.String{Value: time.Duration(i1).String()}
 
-	return
+	return ret, err
 }
 
 func timesMonthString(args ...xlang.Object) (
@@ -411,7 +412,7 @@ func timesMonthString(args ...xlang.Object) (
 ) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	i1, ok := xlang.ToInt64(args[0])
@@ -421,12 +422,12 @@ func timesMonthString(args ...xlang.Object) (
 			Expected: "int(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.String{Value: time.Month(i1).String()}
 
-	return
+	return ret, err
 }
 
 func timesDate(args ...xlang.Object) (
@@ -435,7 +436,7 @@ func timesDate(args ...xlang.Object) (
 ) {
 	if len(args) < 7 || len(args) > 8 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	i1, ok := xlang.ToInt(args[0])
@@ -445,7 +446,7 @@ func timesDate(args ...xlang.Object) (
 			Expected: "int(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 	i2, ok := xlang.ToInt(args[1])
 	if !ok {
@@ -454,7 +455,7 @@ func timesDate(args ...xlang.Object) (
 			Expected: "int(compatible)",
 			Found:    args[1].TypeName(),
 		}
-		return
+		return ret, err
 	}
 	i3, ok := xlang.ToInt(args[2])
 	if !ok {
@@ -463,7 +464,7 @@ func timesDate(args ...xlang.Object) (
 			Expected: "int(compatible)",
 			Found:    args[2].TypeName(),
 		}
-		return
+		return ret, err
 	}
 	i4, ok := xlang.ToInt(args[3])
 	if !ok {
@@ -472,7 +473,7 @@ func timesDate(args ...xlang.Object) (
 			Expected: "int(compatible)",
 			Found:    args[3].TypeName(),
 		}
-		return
+		return ret, err
 	}
 	i5, ok := xlang.ToInt(args[4])
 	if !ok {
@@ -481,7 +482,7 @@ func timesDate(args ...xlang.Object) (
 			Expected: "int(compatible)",
 			Found:    args[4].TypeName(),
 		}
-		return
+		return ret, err
 	}
 	i6, ok := xlang.ToInt(args[5])
 	if !ok {
@@ -490,7 +491,7 @@ func timesDate(args ...xlang.Object) (
 			Expected: "int(compatible)",
 			Found:    args[5].TypeName(),
 		}
-		return
+		return ret, err
 	}
 	i7, ok := xlang.ToInt(args[6])
 	if !ok {
@@ -499,7 +500,7 @@ func timesDate(args ...xlang.Object) (
 			Expected: "int(compatible)",
 			Found:    args[6].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	var loc *time.Location
@@ -511,12 +512,12 @@ func timesDate(args ...xlang.Object) (
 				Expected: "string(compatible)",
 				Found:    args[7].TypeName(),
 			}
-			return
+			return ret, err
 		}
 		loc, err = time.LoadLocation(i8)
 		if err != nil {
 			ret = wrapError(err)
-			return
+			return ret, err
 		}
 	} else {
 		loc = time.Now().Location()
@@ -527,24 +528,24 @@ func timesDate(args ...xlang.Object) (
 			time.Month(i2), i3, i4, i5, i6, i7, loc),
 	}
 
-	return
+	return ret, err
 }
 
 func timesNow(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 0 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Time{Value: time.Now()}
 
-	return
+	return ret, err
 }
 
 func timesParse(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 2 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	s1, ok := xlang.ToString(args[0])
@@ -554,7 +555,7 @@ func timesParse(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "string(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	s2, ok := xlang.ToString(args[1])
@@ -564,24 +565,24 @@ func timesParse(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "string(compatible)",
 			Found:    args[1].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	parsed, err := time.Parse(s1, s2)
 	if err != nil {
 		ret = wrapError(err)
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Time{Value: parsed}
 
-	return
+	return ret, err
 }
 
 func timesUnix(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 2 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	i1, ok := xlang.ToInt64(args[0])
@@ -591,7 +592,7 @@ func timesUnix(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "int(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	i2, ok := xlang.ToInt64(args[1])
@@ -601,18 +602,18 @@ func timesUnix(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "int(compatible)",
 			Found:    args[1].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Time{Value: time.Unix(i1, i2)}
 
-	return
+	return ret, err
 }
 
 func timesAdd(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 2 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	t1, ok := xlang.ToTime(args[0])
@@ -622,7 +623,7 @@ func timesAdd(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	i2, ok := xlang.ToInt64(args[1])
@@ -632,18 +633,18 @@ func timesAdd(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "int(compatible)",
 			Found:    args[1].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Time{Value: t1.Add(time.Duration(i2))}
 
-	return
+	return ret, err
 }
 
 func timesSub(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 2 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	t1, ok := xlang.ToTime(args[0])
@@ -653,7 +654,7 @@ func timesSub(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	t2, ok := xlang.ToTime(args[1])
@@ -663,18 +664,18 @@ func timesSub(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "time(compatible)",
 			Found:    args[1].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Int{Value: int64(t1.Sub(t2))}
 
-	return
+	return ret, err
 }
 
 func timesAddDate(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 4 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	t1, ok := xlang.ToTime(args[0])
@@ -684,7 +685,7 @@ func timesAddDate(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	i2, ok := xlang.ToInt(args[1])
@@ -694,7 +695,7 @@ func timesAddDate(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "int(compatible)",
 			Found:    args[1].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	i3, ok := xlang.ToInt(args[2])
@@ -704,7 +705,7 @@ func timesAddDate(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "int(compatible)",
 			Found:    args[2].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	i4, ok := xlang.ToInt(args[3])
@@ -714,18 +715,18 @@ func timesAddDate(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "int(compatible)",
 			Found:    args[3].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Time{Value: t1.AddDate(i2, i3, i4)}
 
-	return
+	return ret, err
 }
 
 func timesAfter(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 2 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	t1, ok := xlang.ToTime(args[0])
@@ -735,7 +736,7 @@ func timesAfter(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	t2, ok := xlang.ToTime(args[1])
@@ -745,7 +746,7 @@ func timesAfter(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "time(compatible)",
 			Found:    args[1].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	if t1.After(t2) {
@@ -754,13 +755,13 @@ func timesAfter(args ...xlang.Object) (ret xlang.Object, err error) {
 		ret = xlang.FalseValue
 	}
 
-	return
+	return ret, err
 }
 
 func timesBefore(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 2 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	t1, ok := xlang.ToTime(args[0])
@@ -770,7 +771,7 @@ func timesBefore(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	t2, ok := xlang.ToTime(args[1])
@@ -780,7 +781,7 @@ func timesBefore(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	if t1.Before(t2) {
@@ -789,13 +790,13 @@ func timesBefore(args ...xlang.Object) (ret xlang.Object, err error) {
 		ret = xlang.FalseValue
 	}
 
-	return
+	return ret, err
 }
 
 func timesTimeYear(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	t1, ok := xlang.ToTime(args[0])
@@ -805,18 +806,18 @@ func timesTimeYear(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Int{Value: int64(t1.Year())}
 
-	return
+	return ret, err
 }
 
 func timesTimeMonth(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	t1, ok := xlang.ToTime(args[0])
@@ -826,18 +827,18 @@ func timesTimeMonth(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Int{Value: int64(t1.Month())}
 
-	return
+	return ret, err
 }
 
 func timesTimeDay(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	t1, ok := xlang.ToTime(args[0])
@@ -847,18 +848,18 @@ func timesTimeDay(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Int{Value: int64(t1.Day())}
 
-	return
+	return ret, err
 }
 
 func timesTimeWeekday(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	t1, ok := xlang.ToTime(args[0])
@@ -868,18 +869,18 @@ func timesTimeWeekday(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Int{Value: int64(t1.Weekday())}
 
-	return
+	return ret, err
 }
 
 func timesTimeHour(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	t1, ok := xlang.ToTime(args[0])
@@ -889,18 +890,18 @@ func timesTimeHour(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Int{Value: int64(t1.Hour())}
 
-	return
+	return ret, err
 }
 
 func timesTimeMinute(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	t1, ok := xlang.ToTime(args[0])
@@ -910,18 +911,18 @@ func timesTimeMinute(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Int{Value: int64(t1.Minute())}
 
-	return
+	return ret, err
 }
 
 func timesTimeSecond(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	t1, ok := xlang.ToTime(args[0])
@@ -931,12 +932,12 @@ func timesTimeSecond(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Int{Value: int64(t1.Second())}
 
-	return
+	return ret, err
 }
 
 func timesTimeNanosecond(args ...xlang.Object) (
@@ -945,7 +946,7 @@ func timesTimeNanosecond(args ...xlang.Object) (
 ) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	t1, ok := xlang.ToTime(args[0])
@@ -955,18 +956,18 @@ func timesTimeNanosecond(args ...xlang.Object) (
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Int{Value: int64(t1.Nanosecond())}
 
-	return
+	return ret, err
 }
 
 func timesTimeUnix(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	t1, ok := xlang.ToTime(args[0])
@@ -976,12 +977,12 @@ func timesTimeUnix(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Int{Value: t1.Unix()}
 
-	return
+	return ret, err
 }
 
 func timesTimeUnixNano(args ...xlang.Object) (
@@ -990,7 +991,7 @@ func timesTimeUnixNano(args ...xlang.Object) (
 ) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	t1, ok := xlang.ToTime(args[0])
@@ -1000,18 +1001,18 @@ func timesTimeUnixNano(args ...xlang.Object) (
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Int{Value: t1.UnixNano()}
 
-	return
+	return ret, err
 }
 
 func timesTimeFormat(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 2 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	t1, ok := xlang.ToTime(args[0])
@@ -1021,7 +1022,7 @@ func timesTimeFormat(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	s2, ok := xlang.ToString(args[1])
@@ -1031,24 +1032,23 @@ func timesTimeFormat(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "string(compatible)",
 			Found:    args[1].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	s := t1.Format(s2)
 	if len(s) > xlang.MaxStringLen {
-
 		return nil, xlang.ErrStringLimit
 	}
 
 	ret = &xlang.String{Value: s}
 
-	return
+	return ret, err
 }
 
 func timesIsZero(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	t1, ok := xlang.ToTime(args[0])
@@ -1058,7 +1058,7 @@ func timesIsZero(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	if t1.IsZero() {
@@ -1067,13 +1067,13 @@ func timesIsZero(args ...xlang.Object) (ret xlang.Object, err error) {
 		ret = xlang.FalseValue
 	}
 
-	return
+	return ret, err
 }
 
 func timesToLocal(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	t1, ok := xlang.ToTime(args[0])
@@ -1083,18 +1083,18 @@ func timesToLocal(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Time{Value: t1.Local()}
 
-	return
+	return ret, err
 }
 
 func timesToUTC(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	t1, ok := xlang.ToTime(args[0])
@@ -1104,12 +1104,12 @@ func timesToUTC(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Time{Value: t1.UTC()}
 
-	return
+	return ret, err
 }
 
 func timesTimeLocation(args ...xlang.Object) (
@@ -1118,7 +1118,7 @@ func timesTimeLocation(args ...xlang.Object) (
 ) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	t1, ok := xlang.ToTime(args[0])
@@ -1128,12 +1128,12 @@ func timesTimeLocation(args ...xlang.Object) (
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.String{Value: t1.Location().String()}
 
-	return
+	return ret, err
 }
 
 func timesInLocation(args ...xlang.Object) (
@@ -1142,7 +1142,7 @@ func timesInLocation(args ...xlang.Object) (
 ) {
 	if len(args) != 2 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	t1, ok := xlang.ToTime(args[0])
@@ -1152,7 +1152,7 @@ func timesInLocation(args ...xlang.Object) (
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	s2, ok := xlang.ToString(args[1])
@@ -1162,24 +1162,24 @@ func timesInLocation(args ...xlang.Object) (
 			Expected: "string(compatible)",
 			Found:    args[1].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	location, err := time.LoadLocation(s2)
 	if err != nil {
 		ret = wrapError(err)
-		return
+		return ret, err
 	}
 
 	ret = &xlang.Time{Value: t1.In(location)}
 
-	return
+	return ret, err
 }
 
 func timesTimeString(args ...xlang.Object) (ret xlang.Object, err error) {
 	if len(args) != 1 {
 		err = xlang.ErrWrongNumArguments
-		return
+		return ret, err
 	}
 
 	t1, ok := xlang.ToTime(args[0])
@@ -1189,10 +1189,10 @@ func timesTimeString(args ...xlang.Object) (ret xlang.Object, err error) {
 			Expected: "time(compatible)",
 			Found:    args[0].TypeName(),
 		}
-		return
+		return ret, err
 	}
 
 	ret = &xlang.String{Value: t1.String()}
 
-	return
+	return ret, err
 }

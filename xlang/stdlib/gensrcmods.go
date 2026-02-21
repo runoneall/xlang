@@ -50,7 +50,7 @@ var SourceModules = map[string]string{` + "\n")
 	out.WriteString("}\n")
 
 	const target = "source_modules.go"
-	if err := os.WriteFile(target, out.Bytes(), 0644); err != nil {
+	if err := os.WriteFile(target, out.Bytes(), 0o644); err != nil {
 		log.Fatal(err)
 	}
 }

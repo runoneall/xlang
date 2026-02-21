@@ -224,7 +224,7 @@ func (s *Scanner) Scan() (
 	if s.mode&DontInsertSemis == 0 {
 		s.insertSemi = insertSemi
 	}
-	return
+	return tok, literal, pos
 }
 
 func (s *Scanner) next() {
