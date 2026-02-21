@@ -11,6 +11,7 @@ var fmtModule = map[string]xlang.Object{
 	"printf":  &xlang.UserFunction{Name: "printf", Value: fmtPrintf},
 	"println": &xlang.UserFunction{Name: "println", Value: fmtPrintln},
 	"sprintf": &xlang.UserFunction{Name: "sprintf", Value: fmtSprintf},
+	"scanln":  &xlang.UserFunction{Name: "scanln", Value: fmtScanln},
 }
 
 func fmtPrint(args ...xlang.Object) (ret xlang.Object, err error) {
@@ -98,4 +99,19 @@ func getPrintArgs(args ...xlang.Object) ([]any, error) {
 		printArgs = append(printArgs, s)
 	}
 	return printArgs, nil
+}
+
+func fmtScanln(args ...xlang.Object) (ret xlang.Object, err error) {
+	numArgs := len(args)
+	if numArgs != 0 {
+		return nil, xlang.ErrWrongNumArguments
+	}
+
+	var input string
+	_, err = fmt.Scanln(&input)
+	if err != nil {
+		return nil, err
+	}
+
+	return &xlang.String{Value: input}, nil
 }
