@@ -11,18 +11,18 @@ import (
 	"strconv"
 )
 
-var tengoModFileRE = regexp.MustCompile(`^srcmod_(\w+).tengo$`)
+var xModFileRE = regexp.MustCompile(`^srcmod_(\w+).x$`)
 
 func main() {
 	modules := make(map[string]string)
 
-	// enumerate all Tengo module files
+	// enumerate all xlang module files
 	files, err := os.ReadDir(".")
 	if err != nil {
 		log.Fatal(err)
 	}
 	for _, file := range files {
-		m := tengoModFileRE.FindStringSubmatch(file.Name())
+		m := xModFileRE.FindStringSubmatch(file.Name())
 		if m != nil {
 			modName := m[1]
 

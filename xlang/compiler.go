@@ -513,7 +513,7 @@ func (c *Compiler) Compile(node parser.Node) error {
 			}
 
 			switch v := v.(type) {
-			case []byte: // module written in Tengo
+			case []byte: // module written in xlang
 				compiled, err := c.compileModule(node,
 					node.ModuleName, v, false)
 				if err != nil {
@@ -629,10 +629,10 @@ func (c *Compiler) SetImportDir(dir string) {
 // SetImportFileExt sets the extension name of the source file for loading
 // local module files.
 //
-// Use this method if you want other source file extension than ".tengo".
+// Use this method if you want other source file extension than ".x".
 //
-//	// this will search for *.tengo, *.foo, *.bar
-//	err := c.SetImportFileExt(".tengo", ".foo", ".bar")
+//	// this will search for *.x, *.foo, *.bar
+//	err := c.SetImportFileExt(".x", ".foo", ".bar")
 //
 // This function requires at least one argument, since it will replace the
 // current list of extension name.

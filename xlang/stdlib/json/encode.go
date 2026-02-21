@@ -240,7 +240,6 @@ func Encode(o xlang.Object) ([]byte, error) {
 		b = strconv.AppendInt(b, o.Value, 10)
 	case *xlang.String:
 		// string encoding bug is fixed with newly introduced function
-		// encodeString(). See: https://github.com/d5/tengo/issues/268
 		b = encodeString(b, o.Value)
 	case *xlang.Time:
 		y, err := o.Value.MarshalJSON()

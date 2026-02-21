@@ -242,7 +242,7 @@ func ToInterface(o Object) (res any) {
 	return res
 }
 
-// FromInterface will attempt to convert an any v to a Tengo Object
+// FromInterface will attempt to convert an any v to a xlang Object
 func FromInterface(v any) (Object, error) {
 	switch v := v.(type) {
 	case nil:
